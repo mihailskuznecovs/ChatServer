@@ -102,5 +102,13 @@ public struct ChatMessage: Codable, Identifiable {
     public let message: String
     public let user: String
     public let userID: UUID
+    
+    public init(date: Date, id: UUID, message: String, user: String, userID: UUID) {
+        self.date = date
+        self.id = id
+        self.message = message
+        self.user = user
+        self.userID = userID
+    }
 }
 
