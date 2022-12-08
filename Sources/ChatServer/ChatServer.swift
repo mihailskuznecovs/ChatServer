@@ -1,7 +1,7 @@
 import Foundation
 import Vapor
 
-class Server {
+public class Server {
     var env: Environment!
     var app: Application!
     var clientConnections = Set<WebSocket>()
