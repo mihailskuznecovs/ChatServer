@@ -31,13 +31,8 @@ public class Server {
                             return
                         }
 
-                        let incomingMessage = try JSONDecoder().decode(ServerSubmittedChatMessage.self, from: data)
-                        let outgoingMessage = ServerReceivingChatMessage(
-                            message: incomingMessage.message,
-                            user: incomingMessage.user,
-                            userID: incomingMessage.userID
-                        )
-                        let json = try JSONEncoder().encode(outgoingMessage)
+                        let incomingMessage = try JSONDecoder().decode(ChatMessage.self, from: data)
+                        let json = try JSONEncoder().encode(incomingMessage)
 
                         guard let jsonString = String(data: json, encoding: .utf8) else {
                             return
@@ -49,9 +44,7 @@ public class Server {
 
                         sleep(1)
 
-                        let answer = ServerReceivingChatMessage(message: "\(incomingMessage.message) to you!",
-                                                                user: self.serverName,
-                                                                userID: self.serverID)
+                        let answer = ChatMessage(date: Date(), id: UUID(), message: "\(incomingMessage.message) to you!", user: self.serverName, userID: self.serverID)
                         let jsonAnswer = try JSONEncoder().encode(answer)
                         guard let answerString = String(data: jsonAnswer, encoding: .utf8) else {
                             return
@@ -103,14 +96,9 @@ extension WebSocket: Hashable {
     }
 }
 
-struct ServerSubmittedChatMessage: Decodable {
-    let message: String
-    let user: String
-    let userID: UUID
-}
-struct ServerReceivingChatMessage: Encodable, Identifiable {
-    let date = Date()
-    let id = UUID()
+struct ChatMessage: Codable, Identifiable {
+    let date: Date
+    let id: UUID
     let message: String
     let user: String
     let userID: UUID
