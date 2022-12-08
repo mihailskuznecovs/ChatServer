@@ -2,31 +2,21 @@ import Foundation
 import Vapor
 
 public class Server {
-    var env: Environment!
-    var app: Application!
-    var clientConnections = Set<WebSocket>()
-    let backgroundQueue = DispatchQueue(label: "background", qos: .background)
+    private var env: Environment!
+    private var app: Application!
+    private var clientConnections = Set<WebSocket>()
+    private let backgroundQueue = DispatchQueue(label: "background", qos: .background)
 
-    let serverName = "Server"
-    let serverID = UUID()
-
+    private let serverName = "Server"
+    private let serverID = UUID()
+    
+    public init() {}
+    
     deinit {
         app.shutdown()
     }
 
-    func setupApp(completion: @escaping () -> Void) {
-        self.backgroundQueue.async {
-            do {
-                self.env = try Environment.detect()
-            } catch {
-                fatalError("Could not detect environment")
-            }
-            self.app = Application(self.env)
-            completion()
-        }
-    }
-
-    func setupServer() {
+    public func setupServer() {
         setupApp {
             self.app.webSocket("chat") { req, client in
                 self.clientConnections.insert(client)
@@ -78,7 +68,7 @@ public class Server {
         }
     }
 
-    func runServer(completion: @escaping () -> Void) {
+    public func startServer(completion: @escaping () -> Void) {
         backgroundQueue.async {
             do {
                 try self.app.start()
@@ -87,7 +77,18 @@ public class Server {
                 fatalError("Could not launch server")
             }
         }
-
+    }
+    
+    private func setupApp(completion: @escaping () -> Void) {
+        self.backgroundQueue.async {
+            do {
+                self.env = try Environment.detect()
+            } catch {
+                fatalError("Could not detect environment")
+            }
+            self.app = Application(self.env)
+            completion()
+        }
     }
 }
 
