@@ -96,11 +96,11 @@ extension WebSocket: Hashable {
     }
 }
 
-struct ChatMessage: Codable, Identifiable {
-    let date: Date
-    let id: UUID
-    let message: String
-    let user: String
-    let userID: UUID
+public struct ChatMessage: Codable, Identifiable {
+    public let date: Date
+    public let id: UUID
+    public let message: String
+    public let user: String
+    public let userID: UUID
 }
 
