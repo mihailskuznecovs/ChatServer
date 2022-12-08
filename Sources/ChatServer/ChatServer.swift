@@ -49,7 +49,7 @@ public class Server {
 
                         sleep(1)
 
-                        let answer = ServerReceivingChatMessage(message: "\(incomingMessage.message) too you!",
+                        let answer = ServerReceivingChatMessage(message: "\(incomingMessage.message) to you!",
                                                                 user: self.serverName,
                                                                 userID: self.serverID)
                         let jsonAnswer = try JSONEncoder().encode(answer)
